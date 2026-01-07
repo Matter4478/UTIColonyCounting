@@ -1,4 +1,5 @@
 {
+  "MLModelVersionStringKey" : "--",
   "MLModelDescriptionKey" : "Detect CFU’s on Agar urine samples",
   "MLModelCreatorDefinedKey" : {
     "com.apple.coreml.model.preview.type" : "objectDetector",
@@ -10,5 +11,6 @@
     "com.apple.createml.model.created" : "2025-11-03T12:46:48Z",
     "com.apple.createml.app.version" : "6.2"
   },
-  "MLModelAuthorKey" : "M. De Vries"
+  "MLModelAuthorKey" : "M. De Vries",
+  "MLModelLicenseKey" : "--"
 }

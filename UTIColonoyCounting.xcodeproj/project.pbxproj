@@ -6,17 +6,21 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A2F19D2B2EAA584200E3EA29 /* MijickCamera in Frameworks */ = {isa = PBXBuildFile; productRef = A2F19D2A2EAA584200E3EA29 /* MijickCamera */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		A2F19D162EAA519F00E3EA29 /* UTIColonoyCounting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UTIColonoyCounting.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2F19D162EAA519F00E3EA29 /* UTIColonyCounting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UTIColonyCounting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A2F19D232EAA51A100E3EA29 /* Exceptions for "UTIColonoyCounting" folder in "UTIColonoyCounting" target */ = {
+		A2F19D232EAA51A100E3EA29 /* Exceptions for "UTIColonoyCounting" folder in "UTIColonyCounting" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = A2F19D152EAA519F00E3EA29 /* UTIColonoyCounting */;
+			target = A2F19D152EAA519F00E3EA29 /* UTIColonyCounting */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -24,7 +28,7 @@
 		A2F19D182EAA519F00E3EA29 /* UTIColonoyCounting */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				A2F19D232EAA51A100E3EA29 /* Exceptions for "UTIColonoyCounting" folder in "UTIColonoyCounting" target */,
+				A2F19D232EAA51A100E3EA29 /* Exceptions for "UTIColonoyCounting" folder in "UTIColonyCounting" target */,
 			);
 			path = UTIColonoyCounting;
 			sourceTree = "<group>";
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2F19D2B2EAA584200E3EA29 /* MijickCamera in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +58,7 @@
 		A2F19D172EAA519F00E3EA29 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A2F19D162EAA519F00E3EA29 /* UTIColonoyCounting.app */,
+				A2F19D162EAA519F00E3EA29 /* UTIColonyCounting.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,9 +66,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A2F19D152EAA519F00E3EA29 /* UTIColonoyCounting */ = {
+		A2F19D152EAA519F00E3EA29 /* UTIColonyCounting */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A2F19D242EAA51A100E3EA29 /* Build configuration list for PBXNativeTarget "UTIColonoyCounting" */;
+			buildConfigurationList = A2F19D242EAA51A100E3EA29 /* Build configuration list for PBXNativeTarget "UTIColonyCounting" */;
 			buildPhases = (
 				A2F19D122EAA519F00E3EA29 /* Sources */,
 				A2F19D132EAA519F00E3EA29 /* Frameworks */,
@@ -76,11 +81,12 @@
 			fileSystemSynchronizedGroups = (
 				A2F19D182EAA519F00E3EA29 /* UTIColonoyCounting */,
 			);
-			name = UTIColonoyCounting;
+			name = UTIColonyCounting;
 			packageProductDependencies = (
+				A2F19D2A2EAA584200E3EA29 /* MijickCamera */,
 			);
 			productName = UTIColonoyCounting;
-			productReference = A2F19D162EAA519F00E3EA29 /* UTIColonoyCounting.app */;
+			productReference = A2F19D162EAA519F00E3EA29 /* UTIColonyCounting.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -107,12 +113,15 @@
 			);
 			mainGroup = A2F19D0D2EAA519E00E3EA29;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A2F19D292EAA584200E3EA29 /* XCRemoteSwiftPackageReference "Camera" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A2F19D172EAA519F00E3EA29 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A2F19D152EAA519F00E3EA29 /* UTIColonoyCounting */,
+				A2F19D152EAA519F00E3EA29 /* UTIColonyCounting */,
 			);
 		};
 /* End PBXProject section */
@@ -356,7 +365,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A2F19D242EAA51A100E3EA29 /* Build configuration list for PBXNativeTarget "UTIColonoyCounting" */ = {
+		A2F19D242EAA51A100E3EA29 /* Build configuration list for PBXNativeTarget "UTIColonyCounting" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A2F19D252EAA51A100E3EA29 /* Debug */,
@@ -366,6 +375,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A2F19D292EAA584200E3EA29 /* XCRemoteSwiftPackageReference "Camera" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Mijick/Camera.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A2F19D2A2EAA584200E3EA29 /* MijickCamera */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2F19D292EAA584200E3EA29 /* XCRemoteSwiftPackageReference "Camera" */;
+			productName = MijickCamera;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A2F19D0E2EAA519F00E3EA29 /* Project object */;
 }

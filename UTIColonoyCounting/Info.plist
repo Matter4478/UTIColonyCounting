@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Colony Counting wants to access Microphone for no reason</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Colony Counting wants to add images to your library for future reference.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Colony Counting wants to acces the camera to capture an image of the culture sample.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
