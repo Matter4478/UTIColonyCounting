@@ -24,7 +24,7 @@ class ViewModel: ObservableObject{
     @Published var Image: UIImage?
     let colonyPredictor: ColonyPredictor = ColonyPredictor()
     @Published var Predictions: [ColonyPredictor.Prediction] = []
-    @Published var requiredAccuracy: Float = 0.75
+    @Published var requiredAccuracy: Float = 0.45
     
     func resetViewModel(){
         self.ErrorHandle = false
@@ -51,7 +51,7 @@ struct ContentView: View {
             VStack{
                 //                Text("This App is intended as a proof of concept for an accessible solution to qualitative analysis of urine culture")
                 Spacer()
-                Text("©️ 2025 M. de Vries")
+                Text("©️ 2025 M. de Vries, T. A. Qiu, W. Chen")
                     .padding(.all)
                 NavigationLink(value: ViewType.Camera){
                     Text("Take Photo")
@@ -84,7 +84,7 @@ struct ContentView: View {
                         Text("Oops, something went wrong!")
                     }
                 })
-
+            
         }
     }
 }
@@ -106,25 +106,25 @@ struct PickerView: View{
     
     func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
         return imageSelection.loadTransferable(type: Data.self) { result in
-                guard imageSelection == self.imageSelection else { return }
-                switch result {
-                case .success(let image?):
-                    // Handle the success case with the image.
-                    self.image = UIImage(data: image)
-                    viewModel.Image = self.image
-                    viewModel.Path = [.Analysis]
-
-                case .success(nil):
-                    print("No image loaded")
-                    viewModel.ErrorMessage = "Failed to load selection."
-                    viewModel.ErrorHandle = true
-                    // Handle the success case with an empty value.
-                case .failure(let error):
-                    print("Failure")
-                    viewModel.ErrorMessage = "Failed to load selection: \(error.localizedDescription)"
-                    viewModel.ErrorHandle = true
-                    // Handle the failure case with the provided error.
-                }
+            guard imageSelection == self.imageSelection else { return }
+            switch result {
+            case .success(let image?):
+                // Handle the success case with the image.
+                self.image = UIImage(data: image)
+                viewModel.Image = self.image
+                viewModel.Path = [.Analysis]
+                
+            case .success(nil):
+                print("No image loaded")
+                viewModel.ErrorMessage = "Failed to load selection."
+                viewModel.ErrorHandle = true
+                // Handle the success case with an empty value.
+            case .failure(let error):
+                print("Failure")
+                viewModel.ErrorMessage = "Failed to load selection: \(error.localizedDescription)"
+                viewModel.ErrorHandle = true
+                // Handle the failure case with the provided error.
+            }
             
         }
     }
@@ -174,7 +174,7 @@ struct CameraView: View{
                             viewModel.Path = [.Analysis]
                         }
                     }
-
+                    
                 }
             }
             .startSession()
@@ -195,22 +195,22 @@ struct AnalysisView: View{
             return
         }
         /*
-        viewModel.colonyPredictor.makePrediction(for: image, completionHandler: self)
-        let detector = try? UTIObjectDetector_2_Iteration_3000(configuration: .init())
-        if let image = image{
-            let buffer = image.convertToBuffer()
-            if let buffer = buffer{
-                do {
-                    let output = try detector?.prediction(image: buffer, iouThreshold: 0.5, confidenceThreshold: 0.50)
-                    viewModel.DetectorOutput = output
-                } catch {
-                    print(error)
-                    viewModel.ErrorMessage = "Something went wrong whilst running the model: \(error.localizedDescription)"
-                    viewModel.ErrorHandle = true
-                }
-            }
-        }
-        */
+         viewModel.colonyPredictor.makePrediction(for: image, completionHandler: self)
+         let detector = try? UTIObjectDetector_2_Iteration_3000(configuration: .init())
+         if let image = image{
+         let buffer = image.convertToBuffer()
+         if let buffer = buffer{
+         do {
+         let output = try detector?.prediction(image: buffer, iouThreshold: 0.5, confidenceThreshold: 0.50)
+         viewModel.DetectorOutput = output
+         } catch {
+         print(error)
+         viewModel.ErrorMessage = "Something went wrong whilst running the model: \(error.localizedDescription)"
+         viewModel.ErrorHandle = true
+         }
+         }
+         }
+         */
         do {
             inProgress = true
             try viewModel.colonyPredictor.makePrediction(for: image) { predictions in
@@ -238,7 +238,7 @@ struct AnalysisView: View{
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
-//                    .padding(.all)
+                //                    .padding(.all)
                 VStack{
                     Spacer()
                     if inProgress{
@@ -255,17 +255,17 @@ struct AnalysisView: View{
                             analyse()
                         }}){
                             Text("Count Colonies")
-                            .foregroundStyle(.white)
-                               
+                                .foregroundStyle(.white)
+                            
                         }
-                            .padding(.all)
-                            .background(.selection)
-                            .cornerRadius(15)
+                        .padding(.all)
+                        .background(.selection)
+                        .cornerRadius(15)
                     }
-                    }
+                }
             }
-                .navigationTitle(Text("Confirm"))
-                
+            .navigationTitle(Text("Confirm"))
+            
         } else {
             Text("AnalysisView")
                 .onAppear(){
@@ -282,13 +282,13 @@ struct CustomCameraScreen: MCameraScreen {
     
     let namespace: Namespace.ID
     let closeMCameraAction: () -> ()
-
-
+    
+    
     var body: some View {
         ZStack() {
             createNavigationBar()
             createCameraOutputView()
-//            createCircle()
+            //            createCircle()
             createCaptureButton()
         }
     }
@@ -306,21 +306,50 @@ private extension CustomCameraScreen {
                 .frame(width: 375, height: 375)
                 .scaledToFit()
         }
-            .padding(.top, 12)
-            .padding(.bottom, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 12)
     }
-//    func createCircle() -> some View{
-//        Circle()
-//            .border(Color(uiColor: .white))
-//    }
+    //    func createCircle() -> some View{
+    //        Circle()
+    //            .border(Color(uiColor: .white))
+    //    }
+}
+
+enum Species: String, CaseIterable{
+    case colony, Bacterium_1, Bacterium_2
 }
 
 struct ResultView: View{
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: ViewModel
     @State var confidentCount: Int = 0
+    @State var annotating: Bool = false
+    @State var removing: Bool = false
+    @State var activeSpecies: Species = .colony
     
-    func getConfidentCount() -> Int{
+    private func convertSpace(reader: GeometryProxy, coordinates: CGRect)-> CGRect{
+        var rect: CGRect {
+            let width = coordinates.size.width * reader.size.width
+            let height = coordinates.size.height * reader.size.height
+            let x = (coordinates.origin.x + 0.5 * coordinates.width) * reader.size.width
+            let y = ((1 - coordinates.origin.y) - 0.5 * coordinates.size.height) * reader.size.height
+            return CGRect(x: x, y: y, width: width, height: height)
+        }
+        return rect
+    }
+    
+    private func inverseConvertSpace(reader: GeometryProxy, coordinates: CGRect) ->CGRect{
+        var rect: CGRect {
+            let width = coordinates.size.width / reader.size.width
+            let height = coordinates.size.height / reader.size.height
+            let x = (coordinates.origin.x - 0.5 * coordinates.width) / reader.size.width
+            let y = 1 - ((1 + coordinates.origin.y) + 0.5 * coordinates.size.height) / reader.size.height
+            return CGRect(x: x, y: y, width: width, height: height)
+        }
+        return rect
+    }
+    
+    private func getConfidentCount() -> Int{
         var count = 0
         for prediction in viewModel.Predictions{
             if Float(prediction.confidence)! >= viewModel.requiredAccuracy{
@@ -330,37 +359,62 @@ struct ResultView: View{
         return count
     }
     
+    private func appendPrediction(reader: GeometryProxy, location: CGPoint){
+        let newPrediction = ColonyPredictor.Prediction(classification: self.activeSpecies.rawValue, confidence: "1", coordinates: inverseConvertSpace(reader: reader, coordinates: CGRect(origin: location, size: CGSize(width: 10, height: 10))))
+        viewModel.Predictions.append(newPrediction)
+        print(viewModel.Predictions.debugDescription)
+    }
+    
+    private func removePrediction(reader: GeometryProxy, location: CGPoint){
+        viewModel.Predictions.indices { prediction in
+            false
+        }
+    }
+    
+    
     var body: some View{
         List{
-//            VStack{
+            //            VStack{
             Section("Results"){
                 Chart(){
                     BarMark(x: .value("Confidence", "All"), y: .value("Number of Colonies", viewModel.Predictions.count))
                     BarMark(x: .value("Confidence", "Met"), y: .value("Number of Colonies", confidentCount))
                 }
             }
-                Section("Annotated Sample"){
-                            if let image = viewModel.Image{
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .overlay {
-                                            GeometryReader{ reader in
-                                                ForEach(viewModel.Predictions, id: \.self) { prediction in
-                                                    if Float(prediction.confidence) ?? 0 >= viewModel.requiredAccuracy{
-                                                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                                            .fill(.white)
-                                                            .frame(width: prediction.coordinates.size.width * reader.size.width, height: prediction.coordinates.size.height * reader.size.width, alignment: .bottomTrailing)
-                                                            .position(x: (prediction.coordinates.origin.x) * reader.size.width + prediction.coordinates.size.width * reader.size.width, y: (1 - prediction.coordinates.origin.y) * reader.size.height - prediction.coordinates.size.height * reader.size.height)
-                                                            .foregroundStyle(Color.white)
-                                                            .opacity(0.5)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        .border(.blue, width: 3)
+            Section("Annotated Sample"){
+                GeometryReader{ reader in
+                    if let image = viewModel.Image{
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .contentShape(Rectangle())
+                            .frame(width: reader.size.width, height: reader.size.height, alignment: .topLeading)
+                            .overlay {
+                                ForEach(viewModel.Predictions, id: \.self) { prediction in
+                                    let size = convertSpace(reader: reader, coordinates: prediction.coordinates)
+                                    if Float(prediction.confidence) ?? 0 >= viewModel.requiredAccuracy{
+                                        RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                            .fill(.white)
+                                            .frame(width: size.width, height: size.height, alignment: .topLeading)
+                                            .position(size.origin)
+                                            .foregroundStyle(Color.white)
+                                            .opacity(0.5)
+                                    }
                                 }
+                            }
+                            .onTapGesture(count: 1) { location in
+                                if self.annotating{
+                                    self.appendPrediction(reader: reader, location: location)
+                                }
+                                if self.removing{
+                                    self.removePrediction(reader: reader, location: location)
+                                }
+                                
+                            }
+                            .border(.blue, width: 3)
                     }
+                }
+            }.frame(width: 300, height: 300, alignment: .bottomLeading)
             Section("Predictions") {
                 Text("Confidence: \(viewModel.requiredAccuracy)")
                 Slider(value: $viewModel.requiredAccuracy, in: 0...1)
@@ -378,7 +432,66 @@ struct ResultView: View{
         .navigationTitle(Text("Results"))
         .navigationBarBackButtonHidden()
         .toolbar {
-            ToolbarItem {
+            if self.removing{
+                ToolbarItem{
+                    Button(action: {
+                        self.removing = false
+                    }){
+                        Text("Done")
+                    }
+                }
+            }
+            if self.annotating{
+                ToolbarItem{
+                    Menu {
+                        ForEach(Species.allCases, id: \.self){ species in
+                            Button(action: {activeSpecies = species}){
+                                HStack{
+                                    if species == activeSpecies{
+                                        Image(systemName: "checkmark")
+                                    }
+                                    Text(species.rawValue)
+                                }
+                            }
+                        }
+                    } label: {
+                        Text("Species")
+                    }}
+                ToolbarItem{
+                    Button(action: {
+                        self.annotating = false
+                    })
+                    {
+                        Text("Done")
+                    }
+                }
+            }
+            if !self.annotating && !self.removing{
+                ToolbarItem{
+                    Button(action: {
+                        self.annotating = true
+                    })
+                    {
+                        Text("Annotate")
+                    }
+                }
+                ToolbarItem{
+                    Button{
+                        self.removing = true
+                    } label: {
+                        Text("Remove")
+                    }
+                }
+                ToolbarItem{
+                    Button {
+                        
+                    } label: {
+                        Text("Export")
+                    }
+                    
+                }
+            }
+            ToolbarItem{
                 Button(action: {
                     viewModel.Path = []
                 }) {
@@ -388,7 +501,6 @@ struct ResultView: View{
         }
     }
 }
-
 
 
 
@@ -409,7 +521,7 @@ import Foundation
 import UIKit
 
 extension UIImage {
-        
+    
     func convertToBuffer() -> CVPixelBuffer? {
         
         let attributes = [

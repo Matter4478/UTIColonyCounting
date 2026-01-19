@@ -8,7 +8,10 @@ import UIKit
 class ColonyPredictor{
     static func createImageClassifier() -> VNCoreMLModel {
         let config = MLModelConfiguration()
-        guard let wrapper = try? UTIObjectDetector_2_Iteration_3000(configuration: config) else {
+//        guard let wrapper = try? UTIObjectDetector_2_Iteration_3000(configuration: config) else {
+//            fatalError("Failed to load ML model")
+//        }
+        guard let wrapper = try? _11m_40_640(configuration: config) else {
             fatalError("Failed to load ML model")
         }
         guard let vnModel = try? VNCoreMLModel(for: wrapper.model) else {
