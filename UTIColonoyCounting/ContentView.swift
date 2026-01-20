@@ -24,13 +24,66 @@ class ViewModel: ObservableObject{
     @Published var Image: UIImage?
     let colonyPredictor: ColonyPredictor = ColonyPredictor()
     @Published var Predictions: [ColonyPredictor.Prediction] = []
-    @Published var requiredAccuracy: Float = 0.45
+    @Published var requiredAccuracy: Float = 0.2
+    @Published var pickerItems: [PhotosPickerItem] = []
+    @Published var imageSelection: PhotosPickerItem?
+    @Published var progress: Progress = Progress()
     
     func resetViewModel(){
         self.ErrorHandle = false
         self.ErrorMessage = "Oops... Something went wrong!"
         self.Image = nil
         self.Predictions = []
+    }
+    
+    func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
+        print("loadTransferable")
+        return imageSelection.loadTransferable(type: Data.self) { result in
+//            guard imageSelection == self.imageSelection else { return }
+            switch result {
+            case .success(let image?):
+                // Handle the success case with the image.
+                var width: Int
+                var height: Int
+                let image = UIImage(data: image)!.cgImage!
+                    if image.width >= image.height{
+                        width = image.height
+                        height = image.width
+                        if let cropped = image.cropping(to: CGRect(x: (height - width) / 2 , y: 0, width: width, height: width)){
+                            DispatchQueue.main.async {
+                                self.Image = UIImage(cgImage: cropped)
+                                self.Path = [.Analysis]
+                            }
+                        }
+                    } else {
+                        width = image.width
+                        height = image.height
+                        if let cropped = image.cropping(to: CGRect(x: 0, y: (height - width) / 2 , width: width, height: width)){
+                            DispatchQueue.main.async{
+                                self.Image = UIImage(cgImage: cropped)
+                                self.Path = [.Analysis]
+                            }
+                        }
+                    }
+
+                
+            case .success(nil):
+                print("No image loaded")
+                DispatchQueue.main.async {
+                    self.ErrorMessage = "Failed to load selection."
+                    self.ErrorHandle = true
+                }
+                // Handle the success case with an empty value.
+            case .failure(let error):
+                print("Failure")
+                DispatchQueue.main.async {
+                    self.ErrorMessage = "Failed to load selection: \(error.localizedDescription)"
+                    self.ErrorHandle = true
+                }
+                // Handle the failure case with the provided error.
+            }
+            
+        }
     }
 }
 
@@ -96,48 +149,22 @@ struct ContentView: View {
 
 struct PickerView: View{
     @Environment(\.isPresented) var isPresented: Bool
-    @State var pickerItems: [PhotosPickerItem] = []
+    @ObservedObject var viewModel: ViewModel
     @State var visible: Bool = false
-    @State var imageSelection: PhotosPickerItem?
-    @State var image: UIImage?
     let maxSelection: Int = 1
     
-    @ObservedObject var viewModel: ViewModel
-    
-    func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
-        return imageSelection.loadTransferable(type: Data.self) { result in
-            guard imageSelection == self.imageSelection else { return }
-            switch result {
-            case .success(let image?):
-                // Handle the success case with the image.
-                self.image = UIImage(data: image)
-                viewModel.Image = self.image
-                viewModel.Path = [.Analysis]
-                
-            case .success(nil):
-                print("No image loaded")
-                viewModel.ErrorMessage = "Failed to load selection."
-                viewModel.ErrorHandle = true
-                // Handle the success case with an empty value.
-            case .failure(let error):
-                print("Failure")
-                viewModel.ErrorMessage = "Failed to load selection: \(error.localizedDescription)"
-                viewModel.ErrorHandle = true
-                // Handle the failure case with the provided error.
-            }
-            
-        }
-    }
+
     
     var body: some View{
-        PhotosPicker(selection: $pickerItems, maxSelectionCount: maxSelection, selectionBehavior: .ordered, matching: .images, preferredItemEncoding: .automatic) {
+        PhotosPicker(selection: $viewModel.pickerItems, maxSelectionCount: maxSelection, selectionBehavior: .ordered, matching: .images, preferredItemEncoding: .automatic) {
             Text("Select Image for Analysis")
                 .padding(.all)
         }
-        .onChange(of: pickerItems) { oldValue, newValue in
-            if pickerItems.count != 0{
-                _ = loadTransferable(from: pickerItems.first!)
-                
+        .onChange(of: viewModel.pickerItems) {
+            if viewModel.pickerItems.count != 0{
+                viewModel.progress = viewModel.loadTransferable(from: viewModel.pickerItems.first!)
+            } else {
+                print("error with photoPicker!")
             }
         }
     }
@@ -380,6 +407,7 @@ struct ResultView: View{
                     BarMark(x: .value("Confidence", "All"), y: .value("Number of Colonies", viewModel.Predictions.count))
                     BarMark(x: .value("Confidence", "Met"), y: .value("Number of Colonies", confidentCount))
                 }
+                Text("All: \(viewModel.Predictions.count), Conf: \(String(format: "%.2f", viewModel.requiredAccuracy)), Met: \(confidentCount)")
             }
             Section("Annotated Sample"){
                 GeometryReader{ reader in
