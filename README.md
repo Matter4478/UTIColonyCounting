@@ -13,4 +13,4 @@ To prevent confusion; CoreML has a different coordinate system from swiftui. Thu
 Currently manually removing annotations is not yet possible. As is exporting the annotations in conjunct with the captured image. 
 
 ## ML-Model: YoloV11
-This repository contains a Jupiter Notebook with all the necessary steps to train a functional ML-model. It also contains pre-trained model parameters.
+This repository contains a Jupiter Notebook with all the necessary steps to train a functional ML-model. It also contains pre-trained model parameters as an example trained for 40 epochs on a resolution of 640.
