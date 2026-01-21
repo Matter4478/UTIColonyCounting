@@ -1,6 +1,7 @@
 # UTIColonyCounting
 Repo for UTIColonyCounting
 
+## Mobile Application
 This repository contains a xcode-project file and all required files and folders to modify and compile this proof of concept application. The UI is built using SwiftUI, some Apple frameworks and depends on Mijick Camera.
 
 At the moment there is no functional storage of analysis outcomes.
@@ -10,3 +11,6 @@ The application is structured fairly straightforward. As expected in a SwiftUI a
 To prevent confusion; CoreML has a different coordinate system from swiftui. Thus for rendering the bounding boxes in the UI a conversion has to take place. This is done in ResultView by the functions convertSpace and invertConvertSpace. 
 
 Currently manually removing annotations is not yet possible. As is exporting the annotations in conjunct with the captured image. 
+
+## ML-Model: YoloV11
+This repository contains a Jupiter Notebook with all the necessary steps to train a functional ML-model. It also contains pre-trained model parameters.
